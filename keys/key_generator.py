@@ -49,7 +49,15 @@ def __gen_ed22519_keypair(key_path: str):
 
 
 def __gen_dilithium_keypair(key_path: str, version: str = "2"):
-    with oqs.Signature("Dilithium" + version) as key_pair_generator:
+    __gen_generic_oqs_signature(key_path, "Dilithium", version)
+
+
+def __gen_falcon_keypair(key_path: str, version: str):
+    __gen_generic_oqs_signature(key_path, f"Falcon-{version}", version)
+
+
+def __gen_generic_oqs_signature(key_path: str, algorithm_oqs: str, version: str):
+    with oqs.Signature(algorithm_oqs) as key_pair_generator:
         public_key = key_pair_generator.generate_keypair()
         private_key = key_pair_generator.export_secret_key()
 
@@ -63,6 +71,7 @@ def __gen_dilithium_keypair(key_path: str, version: str = "2"):
 # python key_generator.py rsa {key name} {modulus}
 # python key_generator.py ed25519 {key name}
 # python key_generator.py Dilithium2 {key name}
+# python key_generator.py Falcon {key name}
 if __name__ == '__main__':
     algorithm = sys.argv[1].lower()
     key_name = sys.argv[2]
@@ -73,5 +82,9 @@ if __name__ == '__main__':
         __gen_ed22519_keypair(key_name)
     elif algorithm.startswith("dilithium"):
         __gen_dilithium_keypair(key_name, algorithm[-1])
+    elif algorithm.startswith("falcon"):
+        version = algorithm.split("-")[1]
+        algorithm = f'falcon-padded-{version}'
+        __gen_falcon_keypair(key_name, version)
     else:
         print("Unspported opperation (must be 'rsa', 'ed25519' or Dilithium2)")

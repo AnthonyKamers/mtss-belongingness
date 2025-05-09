@@ -1,0 +1,65 @@
+{
+    "100_0": {
+        "hash": "d5f2bb5f919e7f6cbb1accca3a4a95cfbb0f6104222caf87c223275a9e7130ce4a5308fafc78d686cbd06ca6b02ba846202b2bdb095bd14c7c293da58a778257",
+        "blocks_passed": 19,
+        "client_1": 0.01,
+        "server": 0.18,
+        "client_2": 0.04
+    },
+    "100_1": {
+        "hash": "d5f2bb5f919e7f6cbb1accca3a4a95cfbb0f6104222caf87c223275a9e7130ce4a5308fafc78d686cbd06ca6b02ba846202b2bdb095bd14c7c293da58a778257",
+        "blocks_passed": 38,
+        "client_1": 0.01,
+        "server": 0.2,
+        "client_2": 0.07
+    },
+    "100_2": {
+        "hash": "d5f2bb5f919e7f6cbb1accca3a4a95cfbb0f6104222caf87c223275a9e7130ce4a5308fafc78d686cbd06ca6b02ba846202b2bdb095bd14c7c293da58a778257",
+        "blocks_passed": 76,
+        "client_1": 0.01,
+        "server": 0.2,
+        "client_2": 0.12
+    },
+    "1000_0": {
+        "hash": "ad29bee325f23c6bd071942f1afb4b34687c56cf3eeb4555912d03aa65f904fe5d6d946e6e2290d2ce0734ce1aa235b21f29b18aa5cfc419f0170f18787b5590",
+        "blocks_passed": 142,
+        "client_1": 0.01,
+        "server": 5.35,
+        "client_2": 0.07
+    },
+    "1000_1": {
+        "hash": "ad29bee325f23c6bd071942f1afb4b34687c56cf3eeb4555912d03aa65f904fe5d6d946e6e2290d2ce0734ce1aa235b21f29b18aa5cfc419f0170f18787b5590",
+        "blocks_passed": 284,
+        "client_1": 0.01,
+        "server": 5.24,
+        "client_2": 0.11
+    },
+    "1000_2": {
+        "hash": "ad29bee325f23c6bd071942f1afb4b34687c56cf3eeb4555912d03aa65f904fe5d6d946e6e2290d2ce0734ce1aa235b21f29b18aa5cfc419f0170f18787b5590",
+        "blocks_passed": 426,
+        "client_1": 0.01,
+        "server": 5.37,
+        "client_2": 0.17
+    },
+    "10000_0": {
+        "hash": "fa22cc19398097eeb5bf03f7a1a207cc2b9d7916d7391b48c191d9773708e8b3a31bd9e9fa3b223f97420241f729b1cdaa041e1fdb3244da5b860f84948f2c11",
+        "blocks_passed": 909,
+        "client_1": 0.04,
+        "server": 84.48,
+        "client_2": 0.19
+    },
+    "10000_1": {
+        "hash": "fa22cc19398097eeb5bf03f7a1a207cc2b9d7916d7391b48c191d9773708e8b3a31bd9e9fa3b223f97420241f729b1cdaa041e1fdb3244da5b860f84948f2c11",
+        "blocks_passed": 1817,
+        "client_1": 0.04,
+        "server": 81.66,
+        "client_2": 0.27
+    },
+    "10000_2": {
+        "hash": "fa22cc19398097eeb5bf03f7a1a207cc2b9d7916d7391b48c191d9773708e8b3a31bd9e9fa3b223f97420241f729b1cdaa041e1fdb3244da5b860f84948f2c11",
+        "blocks_passed": 2725,
+        "client_1": 0.04,
+        "server": 83.37,
+        "client_2": 0.35
+    }
+}

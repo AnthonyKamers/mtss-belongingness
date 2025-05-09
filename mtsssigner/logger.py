@@ -1,14 +1,16 @@
 from datetime import datetime
 from datetime import timedelta
-from typing import List, Callable, Union
+from typing import List, Callable, Union, Tuple
 
-from mtsssigner.signature_scheme import SigScheme
+from mtsssigner.blocks.Block import Block
+from mtsssigner.blocks.Parser import Parser
+from mtsssigner.utils.file_and_block_utils import get_signature_file_path, get_correction_file_path
 
 LOG_FILE_PATH = "./logs.txt"
 enabled = False
 
 
-def log_program_command(command: List[str], sig_scheme: SigScheme) -> None:
+def log_program_command(command: List[str], sig_scheme) -> None:
     if not enabled:
         return
     command_str = " ".join(command)
@@ -47,40 +49,40 @@ def log_execution_end(elapsed_time: timedelta) -> None:
 
 
 def log_signature_parameters(signed_file: str, private_key_file: str, n: int,
-                             sig_scheme: SigScheme, d: int, t: int, blocks: List[str],
-                             q: int = -1, k: int = -1, max_size_bytes: int = -1) -> None:
+                             sig_scheme, d: int, t: int, parser: Parser,
+                             q: Union[None, int] = None, k: Union[None, int] = None,
+                             n_from_file: Union[None, int] = None) -> None:
     if not enabled:
         return
     log_content = f"Signed file = {signed_file}; Private key file = {private_key_file}\n"
-    if sig_scheme.sig_algorithm == "PKCS#1 v1.5":
+    log_content += f"File supported by the parser: {parser.__class__.__name__}\n"
+    if sig_scheme.sig_algorithm == "rsa":
         key_length = f"modulus = {sig_scheme.signature_length_bytes * 8}"
     else:
         key_length = "length = 256; signature length = 512"
     log_content += f"Number of blocks = {n}; Private key {key_length}\n"
-    if max_size_bytes > 0:
-        message_hash_bytes = sig_scheme.digest_size_bytes
-        space_for_tests = int(max_size_bytes - sig_scheme.signature_length_bytes - message_hash_bytes)
-        log_content += f"Supplied max size for signature (in bytes) = {max_size_bytes}\n"
-        log_content += f"Bytes available for hashed tests = {space_for_tests}\n"
-        log_content += ("Unrounded number of tests available = "
-                        f"{(space_for_tests / sig_scheme.digest_size_bytes)}\n")
-    elif k > 0:
-        log_content += f"Supplied k = {k}\n"
+
+    log_content += f"Supplied d = {d}"
+
     if d > 1:
         log_content += f"Resulting CFF = {d}-CFF({t}, {n}), q = {q}, k = {k}\n"
     else:
         log_content += f"Resulting CFF = {d}-CFF({t}, {n})\n"
+
+    if n_from_file:
+        log_content += f"Number of blocks read from file = {n_from_file} | Number expected = {n}\n"
+
     modifiable_blocks_proportion = round(d / n, 4)
     log_content += f"Proportion of modifiable blocks: {modifiable_blocks_proportion}%\n"
-    log_content += f"Blocks:\n{blocks}\n"
+    log_content += f"Blocks:\n{[str(block) for block in parser.get_blocks()]}\n"
     __write_to_log_file(log_content)
 
 
 def log_nonmodified_verification_result(verified_file: str, public_key_file: str,
-                                        sig_scheme: SigScheme, result: bool) -> None:
+                                        sig_scheme, result: bool) -> None:
     if not enabled:
         return
-    if sig_scheme.sig_algorithm == "PKCS#1 v1.5":
+    if sig_scheme.sig_algorithm == "rsa":
         key_length = f"modulus = {sig_scheme.signature_length_bytes * 8}"
     else:
         key_length = "length = 256; signature length = 512"
@@ -95,15 +97,16 @@ def log_nonmodified_verification_result(verified_file: str, public_key_file: str
 
 def log_localization_result(verified_file: str, public_key_file: str, n: int, t: int,
                             d: int, q: int, k: int, result: bool, modified_blocks: List[int],
-                            modified_blocks_content: List[str]) -> None:
+                            modified_blocks_content: List[Block], parser: Parser) -> None:
     if not enabled:
         return
     log_content = f"Verified file = {verified_file}; Public key file = {public_key_file}\n"
+    log_content += f"File supported by the parser: {parser.__class__.__name__}\n"
     log_content += f"Number of blocks = {n}, Number of tests = {t}, Max modifications = {d}\n"
     log_content += f"Resulting CFF = {d}-CFF({t}, {n}), q = {q}, k = {k}\n"
     signature_status = "Valid" if result else "Invalid"
     log_content += (f"Signature status: {signature_status}; Modified_blocks = {modified_blocks};"
-                    f" Modified_content = {modified_blocks_content}\n")
+                    f" Modified_content = {[str(block) for block in parser.get_blocks()]}\n")
     if len(modified_blocks) <= d:
         localization_result = "complete"
     else:
@@ -163,3 +166,28 @@ def __write_to_log_file(content: Union[str, Callable]) -> None:
             content(file=log_file)
         else:
             log_file.write(content)
+
+
+def print_localization_result(result: Tuple[bool, List[int]]):
+    signature_status = "Signature is valid" if result[0] else "Signature could not be verified"
+
+    if result[0]:
+        if len(result[1]) == 0:
+            localization_status = "message was not modified"
+        else:
+            localization_status = f"Modified blocks = {result[1]}"
+        print(f"Verification result: {signature_status}; {localization_status}")
+    else:
+        print(f"Verification result: {signature_status}")
+
+
+def print_operation_result(enabled_now: bool, operation: str, message_file_path: str,
+                           localization_result: Tuple[bool, List[int]] = None):
+    if not enabled_now:
+        return
+    if operation == "sign":
+        print(f"Signature written to {get_signature_file_path(message_file_path)}")
+    elif operation == "verify":
+        print_localization_result(localization_result)
+    elif operation == "verify-correct":
+        print(f"Correction written to {get_correction_file_path(message_file_path)}")

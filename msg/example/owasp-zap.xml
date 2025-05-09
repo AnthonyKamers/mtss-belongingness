@@ -1,0 +1,18 @@
+<alert>
+    <pluginId>40012</pluginId>
+    <alert>Cross Site Scripting</alert>
+    <instances>
+        <instance>
+            <uri>https://example.com/search</uri>
+            <method>GET</method>
+            <param>q</param>
+            <evidence>&lt;script&gt;alert(1)&lt;/script&gt;</evidence>
+            <attack>&lt;script&gt;alert(1)&lt;/script&gt;</attack>
+            <messageId>42</messageId>
+            <source>
+                <origin>Passive Scanner</origin>
+                <timestamp>2024-11-22T10:42:33Z</timestamp>
+            </source>
+        </instance>
+    </instances>
+</alert>

@@ -1,17 +1,47 @@
-import sys
+from itertools import count
+from typing import Union
 
-# Generates txt file of n lines consisting of "line_content"
+import typer
+
+DEFAULT_LINE = "0" * 8 + "\n"
+
+app = typer.Typer()
+
+
+def write_line(counter, row_width, zero_fill=8):
+    return "\n".join([str(next(counter)).zfill(zero_fill) for _ in range(row_width)])
+
+
+def write_one_line(counter, row_width, zero_fill=8):
+    return ",".join([str(next(counter)).zfill(zero_fill) for _ in range(row_width)])
+
+
+@app.command()
+def generate_txt(output_file: str, max_size: int, lines: Union[int, None] = None, row_width: int = 100):
+    counter = count()
+    counter_lines = 1
+
+    with open(output_file, 'w') as f:
+        while f.tell() <= max_size:
+            if lines:
+                if counter_lines == lines:
+                    content = write_one_line(counter, row_width)
+                else:
+                    content = DEFAULT_LINE
+                    counter_lines += 1
+            else:
+                content = write_line(counter, row_width)
+
+            f.write(content)
+
+
+@app.command()
+def generate_n(output_file: str, n: int):
+    with open(output_file, 'w') as f:
+        for _ in range(n):
+            f.write(DEFAULT_LINE)
+
+
+# filename size_bytes lines
 if __name__ == '__main__':
-    n_lines = int(sys.argv[1])
-    line_content = sys.argv[2]
-    try:
-        with open(f"{n_lines}_{line_content}.txt", "a", encoding="utf-8") as file:
-            for line in range(n_lines - 1):
-                file.write(f"{line_content}\n")
-            file.write(f"{line_content}")
-    except OSError:
-        content_name = line_content[0:10] + f"_{len(line_content)}"
-        with open(f"{n_lines}_{content_name}.txt", "a", encoding="utf-8") as file:
-            for line in range(n_lines - 1):
-                file.write(f"{line_content}\n")
-            file.write(f"{line_content}")
+    app()

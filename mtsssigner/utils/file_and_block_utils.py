@@ -2,6 +2,8 @@ from typing import List, Tuple, Union
 
 from xml.etree import ElementTree
 
+from mtsssigner.blocks.Block import Block
+
 
 # Contains functions for opening message files and writing their signature
 # or correction to files, as well as building blocks from their content or
@@ -21,8 +23,8 @@ def __get_message_and_blocks_from_txt_file(txt_file_path: str, message: str = No
 
 
 # Rebuilds the original txt message from its blocks.
-def __rebuild_txt_content_from_blocks(blocks: List[str]) -> str:
-    return "\n".join(blocks)
+def __rebuild_txt_content_from_blocks(blocks: List[Block]) -> str:
+    return "\n".join([str(block) for block in blocks])
 
 
 # Builds a list of blocks and content string from a xml file. For
@@ -118,6 +120,12 @@ def write_correction_to_file(message_file_path: str, content: str):
     correction_file_path = get_correction_file_path(message_file_path)
     with open(correction_file_path, "w", encoding="utf-8") as correction_file:
         correction_file.write(content)
+
+
+def write_cff_to_file(t: int, n: int, d: int, cff: List[List[int]]) -> None:
+    with open(f"cffs/{d}-CFF({t}, {n}).txt", "w", encoding="utf-8") as file:
+        for line in cff:
+            file.write(" ".join([str(number) for number in line]) + "\n")
 
 
 def read_cff_from_file(t: int, n: int, d: int) -> List[List[int]]:

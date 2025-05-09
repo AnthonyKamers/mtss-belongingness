@@ -1,0 +1,31 @@
+
+    \begin{table*}[htbp]
+        \setlength{\tabcolsep}{10pt}
+        \centering
+        \caption{Performance of signature operations of MTSS(ML-DSA-I, BLAKE2b, $\M$) for several choices of $\M$,
+plain text files of different sizes. For ease of notation, we use \texttt{Ver$_0$} to denote \texttt{Ver} with $|I| = 
+0$, and \texttt{Ver$_1$} to denote \texttt{Ver} with $|I| = 1$.}
+        \begin{tabular}{rrrrrrrrrrr}
+            \toprule
+            \multicolumn{5}{c}{Parameters of $\M$} & \multicolumn{2}{c}{Size  (kB)} & \multicolumn{4}{c}{Time (ms)} 
+            \\
+            \cmidrule(lr){1-5} \cmidrule(lr){6-7} \cmidrule(lr){8-11}
+            $d$ & $k$ & $q$ & $t$ & $n$ & $m$ & $\sigma$ & \texttt{Sig} & \texttt{Ver$_1$} & \texttt{Ver$_0$} &
+            $\Sigma$.\texttt{Ver} \\
+            \midrule
+    	2 & 4 & 7 & 49 & 2401 & 4801 & 5622 & 7.80164060667955 & 27.57834839404679 &0.05173155529209588 & 0.06566921783861066 \\
+	2 & 4 & 9 & 81 & 6561 & 13121 & 7670 & 31.56288980188833 & 160.5028714492737 &0.09992381173293347 & 0.08141321639299662 \\
+	3 & 4 & 11 & 121 & 14641 & 29281 & 10230 & 99.36736622944152 & 611.174961680119 &0.1410950562016692 & 0.08622336823472582 \\
+	4 & 4 & 13 & 169 & 28561 & 57121 & 13302 & 247.9566814347351 & 2060.94808831128 &0.2018550215675448 & 0.1353006728402234 \\
+	\midrule
+
+                    	1 & - & - & 15 & \multirow{4}{*}{4096} & \multirow{4}{*}{8191} & 3446 & 8.784258330378261 & 48.01869700167544 & 0.055781113273760376 & 0.058751200064580136 \\
+                    	2 & 4 & 8 & 64 &  &  & 6582 & 16.89525989075657 & 67.82751922601366 & 0.06967254665172003 &0.07001953128492225 \\
+	7 & 3 & 16 & 256 &  &  & 18870 & 48.86433673394316 & 161.07435189957354 & 0.10415885473144934 &0.07183582942417448 \\
+	63 & 2 & 64 & 4096 &  &  & 264630 & 570.2682100102404 & 2135.3520255257617 & 0.479985425866506 &0.070910415544493 \\
+
+        \bottomrule
+      \end{tabular}
+      \label{table:sign-locate-different-parameters}
+    \end{table*}
+    

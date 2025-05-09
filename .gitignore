@@ -49,6 +49,7 @@ target/
 # pyenv
 .python-version
 
+# signatures generated using MTSS/raw files
 msg/*.raw
 msg/*.mts
 msg/*/*.mts
@@ -59,4 +60,15 @@ msg/*/*/*.raw
 msg/*/*_corrected.txt
 msg/*/*/*_corrected.txt
 
+# logs
 logs.txt
+
+# benchmark files
+performance/output/benchmark/*.txt
+
+# blocks data (for MTSS protocol)
+blocks_data/*
+
+# cython compiled files
+*.c
+*.so

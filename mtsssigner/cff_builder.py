@@ -69,23 +69,27 @@ def __get_1_cff_columns(t: int) -> List[int]:
 # 1-CFF is less eficient in size than an optimal 1-CFF.
 def __create_polynomial_cff(q: int, k: int) -> List[List[int]]:
     if not is_prime_power(q):
-        raise ValueError("For polynomial CFFs, q must be a prime power")
-    if not k >= 2:
-        raise ValueError("For polynomial CFFs, k must be >=2")
-    if not q >= k:
-        raise ValueError("For polynomial CFFs, q must be bigger than k")
+        raise ValueError("q must be a prime power")
+    if k < 2 or q < k:
+        raise ValueError("Invalid values for k or q")
 
-    finite_field: FieldArray = galois.GF(q)
-    b_set = __get_b_set(finite_field, k)
-    x_set = __get_x_set(finite_field)
+    field = galois.GF(q)
+    b_set = get_all_polynomials_with_deg_up_to_k(field, k)
+    x_elements = numpy.array(list(itertools.product(field.elements, repeat=2)))
 
-    cff_dimensions = (q ** 2, q ** k)
-    cff = numpy.zeros(cff_dimensions, dtype=int)
+    x_vals = field(x_elements[:, 0])
+    y_vals = field(x_elements[:, 1])
 
-    for test in range(cff_dimensions[0]):
-        for block in range(cff_dimensions[1]):
-            if b_set[block](x_set[test][0]) == x_set[test][1]:
-                cff[test][block] = 1
+    num_tests = q ** 2
+    num_blocks = q ** k
+    cff = numpy.zeros((num_tests, num_blocks), dtype=int)
+
+    for block_idx, b in enumerate(b_set):
+        # Avalia b(x) para todos x em x_vals de uma vez
+        b_eval = b(x_vals)
+        # Onde b(x) == y
+        match_indices = numpy.where(b_eval == y_vals)[0]
+        cff[match_indices, block_idx] = 1
 
     return cff.tolist()
 

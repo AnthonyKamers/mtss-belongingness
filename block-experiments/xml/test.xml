@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sett key1="value1" key2="value2">
+    <array>
+        <item>value1</item>
+        <item>
+            <dictionary>
+                <key>value</key>
+            </dictionary>
+        </item>
+    </array>
+    <child1>
+        <child1-1>value</child1-1>
+    </child1>
+    <child2>
+        value2
+    </child2>
+</sett>

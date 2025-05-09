@@ -1,0 +1,20 @@
+{
+  "alert": {
+    "pluginId": "40012",
+    "alert": "Cross Site Scripting",
+    "instances": [
+      {
+        "uri": "https://example.com/search",
+        "method": "GET",
+        "param": "q",
+        "evidence": "<script>alert(1)</script>",
+        "attack": "<script>alert(1)</script>",
+        "messageId": 42,
+        "source": {
+          "origin": "Passive Scanner",
+          "timestamp": "2024-11-22T10:42:33Z"
+        }
+      }
+    ]
+  }
+}
